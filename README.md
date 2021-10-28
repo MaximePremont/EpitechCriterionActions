@@ -7,6 +7,8 @@ Epitech Criterion Actions is a GitHub action that will automatically launch the 
 
 ## Exemple
 ### An example project has been created: [MaximePremont/EpitechCriterionActions_Example](https://github.com/MaximePremont/EpitechCriterionActions_Example)
+![Example](./example.png?raw=true "Example")
+<p align="center">README.md of epitech-criterion-actions branch</p>
 
 ## Requirements
 The criterion unit tests and the project must be organized as indecated in the epitech unit tests documentation.
