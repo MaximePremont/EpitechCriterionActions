@@ -1,0 +1,72 @@
+name: Epitech Criterion Actions by Maxime Premont
+
+runs:
+  using: "composite"
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v2
+  - name: Install requirements
+    shell: bash
+    run: |-
+      sudo ${{ github.action_path }}/install_criterion.sh
+      sudo apt-get install gcovr
+      sudo pip install Pillow
+  - name: Git configuration
+    shell: bash
+    run: |-
+      git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      git config --global user.name "github-actions[bot]"
+  - name: Select branch
+    shell: bash
+    run: |-
+      git pull
+      git push origin --delete epitech-criterion-actions || echo "Epitech Criterion Actions: Branch not existing, creating..."
+      git pull
+      git checkout -b epitech-criterion-actions
+  - name: Compile and run criterion tests
+    shell: bash
+    run: |-
+      echo "LAST_LOGS" > last_logs.txt
+      make tests_run | cat >> last_logs.txt
+      echo "GCOVR_RESULTS" > gcovr_results.txt
+      ./unit_tests --tap=eca_tap --always-succeed --full-stats &> eca_syn
+      sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" eca_syn &> eca_sync
+      cat eca_tap >> last_logs.txt
+      cat eca_sync >> last_logs.txt
+      gcovr --exclude tests/ > eca_lc
+      gcovr --exclude tests/ -b > eca_lb
+      cat eca_lc >> gcovr_results.txt
+      cat eca_lb >> gcovr_results.txt
+  - name: Generate bars images
+    shell: bash
+    run: python ${{ github.action_path }}/bars_creator.py
+  - name: Update readme
+    shell: bash
+    run: |-
+      echo "### EPITECH CRITERION ACTIONS" > README.md
+      echo "#### Passed tests" >> README.md
+      echo "![Passed tests](./tests.png?raw=true \"Passed tests\")" >> README.md
+      echo "\`\`\`" >> README.md
+      cat eca_sync >> README.md
+      echo "\`\`\`" >> README.md
+      echo "#### Lines coverage" >> README.md
+      echo "![Covered lines](./lines.png?raw=true \"Covered lines\")" >> README.md
+      echo "\`\`\`" >> README.md
+      sed "1,4d;$ d" eca_lc >> README.md
+      echo "\`\`\`" >> README.md
+      echo "#### Branchs coverage" >> README.md
+      echo "![Covered branches](./branches.png?raw=true \"Covered branches\")" >> README.md
+      echo "\`\`\`" >> README.md
+      sed "1,4d;$ d" eca_lb >> README.md
+      echo "\`\`\`" >> README.md
+      echo "View [last_logs.txt](./last_logs.txt) and [gcovr_results.txt](./gcovr_results.txt) file for more informations." >> README.md
+      echo "> Epitech Criterion Actions by [Maxime Premont](http://github.com/MaximePremont)" >> README.md
+  - name: Clean repository
+    shell: bash
+    run: sudo find . ! -name "last_logs.txt" ! -name "gcovr_results.txt" ! -path "./.git/*" ! -name ".git" ! -name "README.md" ! -name "tests.png" ! -name "lines.png" ! -name "branches.png" -delete -print
+  - name: Commit and push if changes
+    shell: bash
+    run: |-
+      git add -A
+      git commit -m "[epitech-criterion-tests] Updated tests result" || exit 0
+      git push origin epitech-criterion-actions
