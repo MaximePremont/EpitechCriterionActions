@@ -69,4 +69,4 @@ runs:
     run: |-
       git add -A
       git commit -m "[epitech-criterion-tests] Updated tests result" || exit 0
-      git push origin epitech-criterion-actions
+      git push origin --all origin
