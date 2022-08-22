@@ -20,6 +20,8 @@ All changes made must be verified by other users before being incorporated.
 
 In order to facilitate verification, it is advisable to proceed with small but multiple pull requests and issues.
 
+It is strongly advised to follow the standard of the latest commits of the project.
+
 **In case of action changes, please put the link of a functional test repository as indicated in [the tests section](#testing).**
 ## Language
 All interactions on the project must be done in English.
