@@ -1,4 +1,5 @@
-<h3 align="center">👨‍💻 Epitech Criterion Actions</h3>
+<h1 align="center">👨‍💻 Epitech Criterion Actions</h1>
+
 <p align="center">Simple GitHub action for Criterion unit tests at Epitech</p>
 
 <p align="center">
